@@ -1,68 +1,51 @@
 package com.group.libraryapp.controller.user;
 
-import com.group.libraryapp.domain.user.User;
 import com.group.libraryapp.dto.user.request.UserCreateRequest;
 import com.group.libraryapp.dto.user.request.UserUpdateRequest;
 import com.group.libraryapp.dto.user.response.UserResponse;
+import com.group.libraryapp.service.user.UserService;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class UserController {
 
-    private final JdbcTemplate jdbcTemplate;
+    // 1. API의 진입 지점으로써 HTTP Body를 객채로 반환하고 있다. -> Controller
+    // 2. 현재 유저가 있는지, 없는지, 등을 확인하고 예외 처리를 해준다. -> Service
+    // 3. SQL을 사용하여 실제 DB와의 통신을 담당한다. -> Repository
+
+    // Controller <-> Service <-> Repository
+
+    // Layered Architeture
+
+    private final UserService userService;
 
     public UserController (JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        this.userService = new UserService(jdbcTemplate);
     }
+
+    // C // R // U // D
 
     @PostMapping("/user") // POST /user
     public void saveUser(@RequestBody UserCreateRequest request) {
-        String sql = "INSERT INTO user (name, age) VALUES (?, ?)";
-        jdbcTemplate.update(sql, request.getName(), request.getAge());
+        userService.createUser(request);
     }
 
     @GetMapping("/user")
     public List<UserResponse> getUsers() {
-
-        String sql = "SELECT * FROM user";
-        return jdbcTemplate.query(sql, new RowMapper<UserResponse>() {
-            @Override
-            public UserResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
-                long id = rs.getLong("id");
-                String name = rs.getString("name");
-                int age = rs.getInt("age");
-
-                return new UserResponse(id, name, age);
-            }
-        });
-
+        return userService.getUsers();
     }
 
     @PutMapping("/user")
     public void updateUser(@RequestBody UserUpdateRequest request) {
-        String readSql = "SELECT * FROM user WHERE id = ?";
-        boolean isUserNotExist = jdbcTemplate.query(readSql, (rs, rowNum) -> 0, request.getId()).isEmpty();
-        if (isUserNotExist) throw new IllegalArgumentException();
-
-        String sql = "UPDATE user SET name = ? WHERE id = ?";
-        jdbcTemplate.update(sql, request.getName(), request.getId());
+        userService.updateUser(request);
     }
 
     @DeleteMapping("/user")
     public void deleteUser(@RequestParam String name) {
-        String readSql = "SELECT * FROM user WHERE name = ?";
-        boolean isUserNotExist = jdbcTemplate.query(readSql, (rs, rowNum) -> 0, name).isEmpty();
-        if (isUserNotExist) throw new IllegalArgumentException();
-
-        String sql = "DELETE FROM user WHERE name = ?";
-        jdbcTemplate.update(sql, name);
+        userService.deleteUser(name);
     }
 
 
