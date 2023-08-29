@@ -33,9 +33,21 @@ public class UserController {
 
     // 스프링 컨테이너는 서로 필요한 클래스끼리 연결해준다.
 
+    // 스프링 빈을 주입 받는 방법
+    // 1) 생성자 사용 / @Autowired
     public UserController (UserService userService) {
         this.userService = userService;
     }
+
+    // 2) setter / @Autowired
+    //    @Autowired
+    //    public void serUserService(UserService userService) {
+    //        this.userService = userService;
+    //    }
+
+    // 3) 필드에 바로 사용
+    //    @Autowired
+    //    private UserService userService;
 
     // C // R // U // D
 
