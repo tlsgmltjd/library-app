@@ -4,7 +4,6 @@ import com.group.libraryapp.dto.user.request.UserCreateRequest;
 import com.group.libraryapp.dto.user.request.UserUpdateRequest;
 import com.group.libraryapp.dto.user.response.UserResponse;
 import com.group.libraryapp.service.user.UserService;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +21,20 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController (JdbcTemplate jdbcTemplate) {
-        this.userService = new UserService(jdbcTemplate);
+    // UserController가 JdbcTemplate에 의존하고 있다.
+
+    // @RestController 어노테이션은 UserController 클래스를 스프링 빈으로 등록한다!
+
+    // 서버가 실행되면 스프링 서버 내부에 거대한 컨테이너를 만들게 된다.
+    // 컨테이너 안에는 클래스가 들어가게 된다. (인스턴스화)
+    // 스프링 컨테이너 안에 들어간 클래스를 스프링 빈이라고 한다.
+    // JdbcTemplate도 스프링 빈으로 등록되어 있다.
+    // UserController를 인스턴스할 때 JdbcTemplate를 넣어준다!
+
+    // 스프링 컨테이너는 서로 필요한 클래스끼리 연결해준다.
+
+    public UserController (UserService userService) {
+        this.userService = userService;
     }
 
     // C // R // U // D
