@@ -11,20 +11,21 @@ public class UserLoanHistory {
     private Long user_id;
 
     @Column(nullable = false)
-    private String book_name;
+    private String bookName;
 
     @Column(length = 1)
-    private Short is_return;
+    // boolean으로 처리해도 tinyint에 잘 매핑된다.
+    private boolean isReturn;
 
     protected UserLoanHistory() {
 
     }
 
-    public UserLoanHistory(Long user_id, String book_name) {
-        if (book_name == null || book_name.isBlank()) throw new IllegalArgumentException(String.format("잘못된 name(%s)이 들어왔습니다.", book_name));
+    public UserLoanHistory(Long user_id, String bookName) {
+        if (bookName == null || bookName.isBlank()) throw new IllegalArgumentException(String.format("잘못된 name(%s)이 들어왔습니다.", bookName));
         this.user_id = user_id;
-        this.book_name = book_name;
-        this.is_return = 0;
+        this.bookName = bookName;
+        this.isReturn = false;
     }
 
 }

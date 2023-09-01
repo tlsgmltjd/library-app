@@ -11,6 +11,8 @@ import com.group.libraryapp.dto.book.request.BookLoanRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class BookService {
 
@@ -31,8 +33,15 @@ public class BookService {
 
     @Transactional
     public void loanBook(BookLoanRequest request) {
+        // 유저 아이디를 가져위해 유저 객체를 불러옴, 유저가 없을 시 예외처리
         User user = userRepository.findByName(request.getUserName()).orElseThrow(IllegalArgumentException::new);
+        // 책 이름이 존재하는 책인지 확인, 책이 없을 시 예외처리
         bookRepository.findByName(request.getBookName()).orElseThrow(IllegalArgumentException::new);
+        // 대출기록 정보를 가져옴, 대출중일시 예외처리
+        if (userLoanHistoryRepository.existsByBookNameAndIsReturn(request.getBookName(), false)) {
+            throw new IllegalArgumentException("대출되어있는 책입니다.");
+        }
+
         userLoanHistoryRepository.save(new UserLoanHistory(user.getId(), request.getBookName()));
     };
 }
