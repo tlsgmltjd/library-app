@@ -68,8 +68,8 @@ public class UserController {
     }
 
     @DeleteMapping("/user")
-    public void deleteUser(@RequestParam String name) {
-        userService.deleteUser(name);
+    public void deleteUser(@RequestParam String book_name) {
+        userService.deleteUser(book_name);
     }
 
 }

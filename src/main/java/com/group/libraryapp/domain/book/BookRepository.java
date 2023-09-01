@@ -1,7 +1,10 @@
 package com.group.libraryapp.domain.book;
 
+import com.group.libraryapp.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookRepository extends JpaRepository<Book, Long> {
+import java.util.Optional;
 
+public interface BookRepository extends JpaRepository<Book, Long> {
+    Optional<Book> findByName(String name);
 }
