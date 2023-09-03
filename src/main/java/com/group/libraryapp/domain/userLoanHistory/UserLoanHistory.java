@@ -8,7 +8,7 @@ public class UserLoanHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id = null;
 
-    private Long user_id;
+    private Long uesrId;
 
     @Column(nullable = false)
     private String bookName;
@@ -21,11 +21,14 @@ public class UserLoanHistory {
 
     }
 
-    public UserLoanHistory(Long user_id, String bookName) {
+    public UserLoanHistory(Long uesrId, String bookName) {
         if (bookName == null || bookName.isBlank()) throw new IllegalArgumentException(String.format("잘못된 name(%s)이 들어왔습니다.", bookName));
-        this.user_id = user_id;
+        this.uesrId = uesrId;
         this.bookName = bookName;
         this.isReturn = false;
     }
 
+    public void doReturn() {
+        this.isReturn = true;
+    }
 }
