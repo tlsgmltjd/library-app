@@ -34,16 +34,19 @@ public class BookService {
 
     @Transactional
     public void loanBook(BookLoanRequest request) {
-        // 유저 아이디를 가져위해 유저 객체를 불러옴, 유저가 없을 시 예외처리
-        User user = userRepository.findByName(request.getUserName()).orElseThrow(IllegalArgumentException::new);
-        // 책 이름이 존재하는 책인지 확인, 책이 없을 시 예외처리
-        bookRepository.findByName(request.getBookName()).orElseThrow(IllegalArgumentException::new);
+        // 책 정보를 가져온다
+        Book book =  bookRepository.findByName(request.getBookName()).orElseThrow(IllegalArgumentException::new);
         // 대출기록 정보를 가져옴, 대출중일시 예외처리
-        if (userLoanHistoryRepository.existsByBookNameAndIsReturn(request.getBookName(), false)) {
+        if (userLoanHistoryRepository.existsByBookNameAndIsReturn(book.getName(), false)) {
             throw new IllegalArgumentException("대출되어있는 책입니다.");
         }
+        // 책 이름이 존재하는 책인지 확인, 책이 없을 시 예외처리
+        bookRepository.findByName(book.getName()).orElseThrow(IllegalArgumentException::new);
+        // 유저 아이디를 가져위해 유저 객체를 불러옴, 유저가 없을 시 예외처리
+        User user = userRepository.findByName(request.getUserName()).orElseThrow(IllegalArgumentException::new);
 
-        userLoanHistoryRepository.save(new UserLoanHistory(user, request.getBookName()));
+
+        userLoanHistoryRepository.save(new UserLoanHistory(user, book.getName()));
     };
 
     @Transactional
