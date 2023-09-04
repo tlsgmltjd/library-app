@@ -1,5 +1,7 @@
 package com.group.libraryapp.domain.userLoanHistory;
 
+import com.group.libraryapp.domain.user.User;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,8 +10,8 @@ public class UserLoanHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id = null;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne // N : 1 관계
+    private User user;
 
     @Column(nullable = false)
     private String bookName;
@@ -22,9 +24,9 @@ public class UserLoanHistory {
 
     }
 
-    public UserLoanHistory(Long userId, String bookName) {
+    public UserLoanHistory(User user, String bookName) {
         if (bookName == null || bookName.isBlank()) throw new IllegalArgumentException(String.format("잘못된 name(%s)이 들어왔습니다.", bookName));
-        this.userId = userId;
+        this.user = user;
         this.bookName = bookName;
         this.isReturn = false;
     }

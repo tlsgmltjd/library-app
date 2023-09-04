@@ -43,7 +43,7 @@ public class BookService {
             throw new IllegalArgumentException("대출되어있는 책입니다.");
         }
 
-        userLoanHistoryRepository.save(new UserLoanHistory(user.getId(), request.getBookName()));
+        userLoanHistoryRepository.save(new UserLoanHistory(user, request.getBookName()));
     };
 
     @Transactional
@@ -51,5 +51,7 @@ public class BookService {
         User user = userRepository.findByName(request.getUserName()).orElseThrow(IllegalArgumentException::new);
         UserLoanHistory history = userLoanHistoryRepository.findByBookNameAndUserId(request.getBookName(), user.getId()).orElseThrow(IllegalArgumentException::new);
         history.doReturn();
+        // userLoanHistoryRepository.save(history);
+        // @Transaction 어노테이션의 영속성 컨텍스트의 변경감지 기능 덕분에 save 안해도 됨
     }
 }
