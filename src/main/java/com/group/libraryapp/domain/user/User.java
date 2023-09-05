@@ -18,13 +18,10 @@ public class User {
     private String name;
     private Integer age;
 
-    @OneToMany(mappedBy = "user") // 1 : N 관계
-    private List<UserLoanHistory> userLoanHistoryList =
-            new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) // 1 : N 관계
+    private List<UserLoanHistory> userLoanHistoryList = new ArrayList<>();
 
-    protected User() {
-
-    }
+    protected User() {}
 
     public User(String name, Integer age) {
         if (name == null || name.isBlank()) {
@@ -46,5 +43,9 @@ public class User {
 
     public void updateName(String name) {
         this.name = name;
+    }
+
+    public void loanBook(String bookName) {
+        this.userLoanHistoryList.add(new UserLoanHistory(this, bookName));
     }
 }

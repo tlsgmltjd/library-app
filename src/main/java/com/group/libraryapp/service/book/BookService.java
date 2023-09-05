@@ -45,8 +45,9 @@ public class BookService {
         // 유저 아이디를 가져위해 유저 객체를 불러옴, 유저가 없을 시 예외처리
         User user = userRepository.findByName(request.getUserName()).orElseThrow(IllegalArgumentException::new);
 
+        user.loanBook(book.getName());
 
-        userLoanHistoryRepository.save(new UserLoanHistory(user, book.getName()));
+        // userLoanHistoryRepository.save(new UserLoanHistory(user, book.getName()));
     };
 
     @Transactional
