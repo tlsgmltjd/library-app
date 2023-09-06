@@ -9,10 +9,14 @@ import com.group.libraryapp.domain.userLoanHistory.UserLoanHistoryRepository;
 import com.group.libraryapp.dto.book.request.BookCreateRequest;
 import com.group.libraryapp.dto.book.request.BookLoanRequest;
 import com.group.libraryapp.dto.book.request.BookReturnRequest;
+import com.group.libraryapp.dto.book.response.BookResponse;
+import com.group.libraryapp.dto.user.response.UserResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -25,6 +29,15 @@ public class BookService {
         this.bookRepository = bookRepository;
         this.userLoanHistoryRepository = userLoanHistoryRepository;
         this.userRepository = userRepository;
+    }
+
+    @Transactional
+    public List<BookResponse> getBooks() {
+        List<Book> books = bookRepository.findAll();
+
+        return books.stream()
+                .map(book -> new BookResponse(book.getId(),book.getName()))
+                .collect(Collectors.toList());
     }
 
     @Transactional
