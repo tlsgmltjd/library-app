@@ -50,10 +50,10 @@ public class UserServiceV2 {
     }
 
     @Transactional
-    public void deleteUser(String bookName) {
+    public void deleteUser(String name) {
         // select * from user where name = ?;
 
-        User user = userRepository.findByName(bookName).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findByName(name).orElseThrow(IllegalArgumentException::new);
 
         userRepository.delete(user);
     }
