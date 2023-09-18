@@ -7,7 +7,7 @@ spring:
   datasource:
     url: "jdbc:h2:mem:library;MODE=MYSQL;NON_KEYWORDS=USER"
     username: "root"
-    password: "12345"
+    password: "Abcd12345!"
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
@@ -34,7 +34,7 @@ spring:
   datasource:
     url: "jdbc:mysql://localhost/library"
     username: "root"
-    password: "12345"
+    password: "Abcd12345!"
     driver-class-name: com.mysql.cj.jdbc.Driver
     jpa:
       hibernate:
